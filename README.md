@@ -1,4 +1,4 @@
-## <h1 align="center"> Olá, me chamo Mário! 🚀</h1>
+## <h1 align="center"> Saudações! 🚀</h1>
 
 ## Sintese 
 <p> Atualmente estudo na Kenzie Academy Brasil</p>

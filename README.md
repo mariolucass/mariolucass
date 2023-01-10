@@ -1,15 +1,15 @@
 ## <h1 align="center"> Saudações! 🚀</h1>
 
 ## Sintese 
-<p> Desenvolvedor Front-End em busca de uma vaga no mercado, tenho 6 meses de experiência com a criação de diversos projetos usuais e efetivos visando o atual Mercado de trabalho, com experiências em HTML5, CSS3, JavaScript, React, TypeScript, além de experiências comunicativas e de Code Reviews.</p>
+<p> Desenvolvedor Front-End buscando uma oportunidade, tenho 6 meses de experiência com a criação de diversos projetos vantajosos e efetivos visando o atual cenário tecnológico, possuo experiências consistentes em HTML5, CSS3, JavaScript e experiência através de usos regulares de frameworks como React, além de experiências comunicativas, gerenciais, colaborativas, entre outras. Acredito que minhas habilidades somadas à minha dedicação e minha vontade de me atualizar e me aperfeiçoar podem, indubitavelmente, contribuir de forma benéfica para uma sinergia eficaz com diversas equipes de trabalho, e estou ansioso por uma oportunidade de evoluir e aprender ainda mais como Desenvolvedor.</p>
 <br>
 <p> Atualmente estudo na Kenzie Academy Brasil.</p>
 
 ## Stats  
-<div align="center"><br>
+<div><br>
 <a href="https://github.com/mariolucass">
-  <img height="185em"  src="https://github-readme-stats.vercel.app/api?username=mariolucass&count_private=true&show_icons=true&border_radius=10px&custom_title=My+Stats&hide=stars&bg_color=002e34,004443,002e34&title_color=00c16c&icon_color=00c16c&text_color=e9e9e9&border_color=00755c&" />
-  <img height="185em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=mariolucass&hide=html&count_private=true&bg_color=002e34,004443,002e34&title_color=00c16c&icon_color=00c16c&text_color=e9e9e9&border_color=00755c&layout=compact&" />
+  <img height="150em"  src="https://github-readme-stats.vercel.app/api?username=mariolucass&count_private=true&show_icons=true&border_radius=10px&custom_title=My+Stats&hide=stars&bg_color=002e34,004443,002e34&title_color=00c16c&icon_color=00c16c&text_color=e9e9e9&border_color=00755c&" />
+  <img height="150em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=mariolucass&hide=html&count_private=true&bg_color=002e34,004443,002e34&title_color=00c16c&icon_color=00c16c&text_color=e9e9e9&border_color=00755c&layout=compact&" />
 </div>
 
 ## Ferramentas e Tecnologias 

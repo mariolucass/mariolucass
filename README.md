@@ -7,6 +7,8 @@
 <br>
 <p> Atualmente estudo na Kenzie Academy Brasil.</p>
 
+<a href = "https://mariolucas.tech"> Portfolio </a>
+
 ## <h1 align="center"> Stats </h1>
 <div><br>
 <a href="https://github.com/mariolucass">
@@ -30,3 +32,5 @@
 <a href = "mailto:contato@mariolasdev@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" target="_blank"></a>
 <a href="https://www.linkedin.com/in/mariolucass" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>   
 </div>
+
+

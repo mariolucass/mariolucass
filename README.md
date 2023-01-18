@@ -1,11 +1,13 @@
 ## <h1 align="center"> Saudações! 🚀</h1>
 
 ## Sintese 
-<p> Desenvolvedor Front-End buscando uma oportunidade, tenho 6 meses de experiência com a criação de diversos projetos vantajosos e efetivos visando o atual cenário tecnológico, possuo experiências consistentes em HTML5, CSS3, JavaScript e experiência através de usos regulares de frameworks como React, além de experiências comunicativas, gerenciais, colaborativas, entre outras. 
+<p> Desenvolvedor Front-End buscando uma oportunidade, tenho 8 meses de experiência com a criação de diversos projetos vantajosos e efetivos visando o atual cenário tecnológico, possuo experiências consistentes em HTML, CSS, JavaScript e usos regulares de frameworks como React, além de experiências comunicativas, gerenciais, colaborativas, entre outras. 
 <br>
-<p> Acredito que minhas habilidades somadas à minha dedicação e minha vontade de me atualizar e me aperfeiçoar podem, indubitavelmente, contribuir de forma benéfica para uma sinergia eficaz com diversas equipes de trabalho, e estou ansioso por uma oportunidade de evoluir e aprender ainda mais como Desenvolvedor. </p>
+<p> Em 2022, durante 3 módulos, fui destaque da turma e promovido a monitor de alunos na Kenzie Academy Brasil. Essa experiência grandiosa, elencada a diversos conhecimentos me permitiram desenvolver qualidades relevantes, como aptidão para trabalhar em equipe, resiliência, capacidade intelectual e resolução de problemas.</p>
 <br>
-<p> Atualmente estudo na Kenzie Academy Brasil.</p>
+<p> Acredito que minhas habilidades somadas à minha dedicação e minha vontade de me atualizar e me aperfeiçoar podem, indubitavelmente, contribuir de forma benéfica para uma sinergia eficaz com diversas e abrangentes equipes de trabalho, estou ansioso por uma oportunidade de evoluir e aprender ainda mais como desenvolvedor. </p>
+<br>
+
 
 <a href = "https://mariolucas.tech"> Portfolio </a>
 

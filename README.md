@@ -1,9 +1,10 @@
 ## <h1 align="center"> Saudações! 🚀</h1>
 
 ## Sintese 
-<p> Desenvolvedor Front-End buscando uma oportunidade, tenho aproximadamente um ano de experiência com a criação de diversos projetos vantajosos e efetivos visando o atual cenário tecnológico, possuo experiências consistentes em HTML, CSS, JavaScript e usos regulares de frameworks como React, além de experiências comunicativas, gerenciais, colaborativas, entre outras. 
+<p> Desenvolvedor Front-End buscando uma oportunidade, tenho um ano de experiência com a criação de diversos projetos vantajosos e efetivos visando o atual cenário tecnológico, possuo experiências consistentes em HTML, CSS, JavaScript e usos regulares de frameworks como React, além de experiências comunicativas, gerenciais, colaborativas, entre outras. 
 <br>
-<p> Em 2022, durante 4 módulos, fui destaque da turma e promovido a monitor de alunos na Kenzie Academy Brasil. Essa experiência grandiosa, elencada a diversos conhecimentos me permitiram desenvolver qualidades relevantes, como aptidão para trabalhar em equipe, resiliência, capacidade intelectual e resolução de problemas.</p>
+<p> Em 2022, durante 4 módulos, fui destaque da turma e promovido a monitor de alunos na Kenzie Academy Brasil. Essa experiência grandiosa, elencada a diversos conhecimentos maiores nas linguagens através do ensino das resoluções me permitiram desenvolver qualidades relevantes, como aptidão para trabalhar em equipe, resiliência, capacidade intelectual e resolução de problemas experiencia esta que impactou de forma direta e indireta na formação de centenas de novos desenvolvedores, direcionando-os para a resolução de problemas rotineiros, boas práticas de código, além de corrigir entregas e realizar Code Reviews.
+</p>
 <br>
 <p> Acredito que minhas habilidades somadas à minha dedicação e minha vontade de me atualizar e me aperfeiçoar podem, indubitavelmente, contribuir de forma benéfica para uma sinergia eficaz com diversas e abrangentes equipes de trabalho, estou ansioso por uma oportunidade de evoluir e aprender ainda mais como desenvolvedor. </p>
 <br>

@@ -1,7 +1,7 @@
 ## <h1 align="center"> Saudações! 🚀</h1>
 
 ## Sintese 
-<p> Desenvolvedor Front-End buscando uma oportunidade, tenho um ano de experiência com a criação de diversos projetos vantajosos e efetivos visando o atual cenário tecnológico, possuo experiências consistentes em HTML, CSS, JavaScript e usos regulares de frameworks como React, além de experiências comunicativas, gerenciais, colaborativas, entre outras. 
+<p> Desenvolvedor Front-End, possuo um ano de experiência com a criação de diversos projetos vantajosos e efetivos visando o atual cenário tecnológico, possuo experiências consistentes em HTML, CSS, JavaScript e usos regulares de frameworks como React, além de experiências comunicativas, gerenciais, colaborativas, entre outras. 
 <br>
 <p> Em 2022, durante 4 módulos, fui destaque da turma e promovido a monitor de alunos na Kenzie Academy Brasil. Essa experiência grandiosa, elencada a diversos conhecimentos maiores nas linguagens através do ensino das resoluções me permitiram desenvolver qualidades relevantes, como aptidão para trabalhar em equipe, resiliência, capacidade intelectual e resolução de problemas experiencia esta que impactou de forma direta e indireta na formação de centenas de novos desenvolvedores, direcionando-os para a resolução de problemas rotineiros, boas práticas de código, além de corrigir entregas e realizar Code Reviews.
 </p>

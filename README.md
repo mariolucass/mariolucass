@@ -16,7 +16,7 @@
   
 <br/>  
 
-<h1> Ferramentas e tecnologias </h1>
+<h1> My Stack </h1>
 <table><tr><td valign="top" width="50%">
 
 <h2 align="center"> Front End </h2>

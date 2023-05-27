@@ -1,4 +1,5 @@
 ![Logo](https://live.staticflickr.com/65535/52916445511_f0c59e4a28_h.jpg)
+<hr>
 
 <h1> FullStack Developer</h1>
 <a href = "https://mariolucas.tech"> Portfólio </a>
@@ -21,6 +22,7 @@
 <br/>  
 
 <h1> My Stack </h1>
+  
 <table><tr><td valign="top" width="50%">
 
 <h2 align="center"> Front End </h2>
@@ -57,7 +59,8 @@
 <a href="https://www.gnu.org/software/bash/" target="_blank"><img style="margin: 10px" src="https://profilinator.rishav.dev/skills-assets/gnu_bash-icon.svg" alt="Bash" height="50" /></a>  
 </div>
 
-</td></tr></table>  
- 
+</td></tr></table> 
+  
+<hr>
   
 ![Logo](https://live.staticflickr.com/65535/52922424826_d803914c35_h.jpg)

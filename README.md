@@ -5,7 +5,8 @@
 <a href = "https://mariolucas.tech"> Portfólio </a>
 
 <h1> Stats </h1>
-<div align="center">
+<div align="center" >
+  <a href="https://www.codewars.com/users/mariolucass">
   <img  src="https://www.codewars.com/users/mariolucass/badges/large" height="220" alt="streak graph"  />
 </div>
 

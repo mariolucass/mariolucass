@@ -5,10 +5,7 @@
 <a href = "https://mariolucas.tech"> Portfólio </a>
 
 <h1> Stats </h1>
-<div align="center" >
-  <a href="https://www.codewars.com/users/mariolucass">
-  <img  src="https://www.codewars.com/users/mariolucass/badges/large" height="220" alt="streak graph"  />
-</div>
+
 
 <div align="center">
   <img  src="https://streak-stats.demolab.com?user=mariolucass&locale=en&mode=daily&theme=gotham&hide_border=false&border_radius=8&order=3&hide_current_streak=true&hide_border=true" height="220" alt="streak graph"  />
@@ -63,5 +60,10 @@
 </td></tr></table> 
   
 <hr>
+
+<div align="center" >
+  <a href="https://www.codewars.com/users/mariolucass">
+  <img  src="https://www.codewars.com/users/mariolucass/badges/large" height="220" alt="streak graph"  />
+</div>
   
 ![Logo](https://live.staticflickr.com/65535/52922424826_d803914c35_h.jpg)

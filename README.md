@@ -20,7 +20,7 @@ Currently the **sole technical owner** of the software ecosystem at **Faculdade 
 
 - **100/100** Google PageSpeed Insights · LCP 0.8s · TBT 30ms
 - **Top 2%** globally on Codewars
-- **GPA 9.09/10** — B.Sc. Information Systems, IFCE
+- **GPA 9.17/10** — B.Sc. Information Systems, IFCE
 - **English C1** (EF SET 66/100)
 - **1,650+** technical issues resolved · **450+** code reviews at Kenzie Academy Brasil
 

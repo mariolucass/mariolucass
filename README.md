@@ -7,7 +7,7 @@
 
 <p><img src="./assets/brand/hero.svg" alt="Mário Lucas, Full Stack Software Engineer. Terminal: architecture, code, cloud, delivery; shipping to production, and it keeps running. Open to engineering opportunities." width="100%" align="top"></p>
 
-<p><a href="https://mariolucas.tech"><img src="./assets/widgets/links/top-portfolio.svg" alt="Portfolio: mariolucas.tech" width="33.3%" align="top"></a><a href="https://www.linkedin.com/in/mariolucass/"><img src="./assets/widgets/links/top-linkedin.svg" alt="LinkedIn: in/mariolucass" width="33.3%" align="top"></a><a href="mailto:mariolasdev@gmail.com"><img src="./assets/widgets/links/top-email.svg" alt="Email: mariolasdev@gmail.com" width="33.3%" align="top"></a></p>
+<p><a href="https://mario-dev.vercel.app"><img src="./assets/widgets/links/top-portfolio.svg" alt="Portfolio: mario-dev.vercel.app" width="33.3%" align="top"></a><a href="https://www.linkedin.com/in/mariolucass/"><img src="./assets/widgets/links/top-linkedin.svg" alt="LinkedIn: in/mariolucass" width="33.3%" align="top"></a><a href="mailto:mariolasdev@gmail.com"><img src="./assets/widgets/links/top-email.svg" alt="Email: mariolasdev@gmail.com" width="33.3%" align="top"></a></p>
 
 <p><img src="./assets/widgets/spacer.svg" alt="" width="1" height="32" align="top"></p>
 

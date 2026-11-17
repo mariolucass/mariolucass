@@ -428,7 +428,7 @@ if __name__ == "__main__":
                              ("Traceability", "Append-only", ["An audit log the database", "refuses to edit", "or delete."]),
                              ("Structure", "DDD", ["Five bounded contexts,", "four ADRs on the big", "trade-offs."])],
                   "Iron Ledger: transactional outbox, sagas, append-only audit, DDD.", 4, 250, 32)
-    link_row("top", [("portfolio", "Portfolio", "mariolucas.tech"), ("linkedin", "LinkedIn", "in/mariolucass"), ("email", "Email", "mariolasdev@gmail.com")])
+    link_row("top", [("portfolio", "Portfolio", "mario-dev.vercel.app"), ("linkedin", "LinkedIn", "in/mariolucass"), ("email", "Email", "mariolasdev@gmail.com")])
     link_row("bottom", [("email", "Email", "mariolasdev@gmail.com"), ("linkedin", "LinkedIn", "in/mariolucass"), ("github", "GitHub", "mariolucass")])
     spacer()
     print("assets rebuilt in", OUT)

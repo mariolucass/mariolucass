@@ -1,14 +1,12 @@
 <div align="center">
 
-<img src="./assets/brand/header-readme-github.jpg" alt="Mário Lucas — Full Stack Software Engineer" width="100%">
+<img src="./assets/brand/hero.svg" alt="Mário Lucas, Full Stack Software Engineer. Terminal: architecture, code, cloud, delivery; shipping to production, and it keeps running. Open to engineering opportunities." width="100%">
 
 <br>
 
-<img src="./assets/widgets/terminal.svg" alt="Terminal: Mário Lucas, Full Stack Engineer. Architecture, code, cloud, delivery. Shipping to production, and it keeps running." width="82%">
-
-<br><br>
-
-**[Portfolio ↗](https://mariolucas.tech)** &nbsp;&nbsp;/&nbsp;&nbsp; **[LinkedIn ↗](https://www.linkedin.com/in/mariolucass/)** &nbsp;&nbsp;/&nbsp;&nbsp; **[mariolasdev@gmail.com](mailto:mariolasdev@gmail.com)**
+<a href="https://mariolucas.tech"><img src="./assets/widgets/link-portfolio.svg" alt="Portfolio: mariolucas.tech" width="32%"></a>
+<a href="https://www.linkedin.com/in/mariolucass/"><img src="./assets/widgets/link-linkedin.svg" alt="LinkedIn: in/mariolucass" width="32%"></a>
+<a href="mailto:mariolasdev@gmail.com"><img src="./assets/widgets/link-email.svg" alt="Email: mariolasdev@gmail.com" width="32%"></a>
 
 <br>
 
@@ -122,8 +120,12 @@ DDD &nbsp;·&nbsp; Event-driven &nbsp;·&nbsp; Sagas &nbsp;·&nbsp; REST &nbsp;�
 
 Open to engineering opportunities and conversations about my work.
 
-**[Get in touch](mailto:mariolasdev@gmail.com)** &nbsp;&nbsp;/&nbsp;&nbsp; **[LinkedIn ↗](https://www.linkedin.com/in/mariolucass/)** &nbsp;&nbsp;/&nbsp;&nbsp; **[GitHub ↗](https://github.com/mariolucass)**
+<a href="mailto:mariolasdev@gmail.com"><img src="./assets/widgets/link-email.svg" alt="Email: mariolasdev@gmail.com" width="32%"></a>
+<a href="https://www.linkedin.com/in/mariolucass/"><img src="./assets/widgets/link-linkedin.svg" alt="LinkedIn: in/mariolucass" width="32%"></a>
+<a href="https://github.com/mariolucass"><img src="./assets/widgets/link-github.svg" alt="GitHub: mariolucass" width="32%"></a>
 
-<img src="./assets/brand/footer-readme-github.jpg" alt="" width="100%">
+<br>
+
+<img src="./assets/brand/footer.svg" alt="Mário Lucas" width="100%">
 
 </div>

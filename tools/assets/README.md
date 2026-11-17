@@ -7,6 +7,6 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python build.py
 ```
 
-- `fonts/`: Grenze and Grenze Italic (titles and labels) plus Inter (body text, the open-source stand-in for SF Pro, whose license forbids redistribution). All SIL OFL, all converted to outlines, never loaded as webfonts.
+- `fonts/`: Grenze and Grenze Italic (titles and labels), JetBrains Mono (terminal), Inter (body text, the open-source stand-in for SF Pro, whose license forbids redistribution). All SIL OFL, all converted to outlines, never loaded as webfonts.
 - `icons/`: technology logos from simple-icons (CC0).
 - Colors, radius and copy live at the top of `build.py` and in `__main__`.

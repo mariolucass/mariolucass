@@ -1,112 +1,129 @@
-![Banner](https://live.staticflickr.com/65535/52916445511_f0c59e4a28_h.jpg)
-
-<div align="center">
-  <h1>Full Stack Software Engineer</h1>
-  <p>Building production-grade systems with Next.js · Node.js · TypeScript · AWS</p>
-  <p>Domain-Driven Design · Event-Driven Architecture · Feature-Sliced Design</p>
-  <br/>
-  <a href="https://meuportfolio-eosin.vercel.app/"> Portfolio</a> &nbsp;·&nbsp;
-  <a href="https://linkedin.com/in/mariolucass"> LinkedIn</a> &nbsp;·&nbsp;
-  <a href="mailto:mariolasdev@gmail.com"> Email</a>
-</div>
-
----
-
-## About Me
-
-Full Stack Software Engineer with hands-on experience building end-to-end systems in production.
-
-Currently the **sole technical owner** of the software ecosystem at **Faculdade CECAPE** designed and delivered a complete digital library system from scratch with DDD, Event-Driven Architecture, native PostgreSQL Full-Text Search and AWS infrastructure (VPC, RDS, App Runner, S3, IAM).
-
-- **100/100** Google PageSpeed Insights · LCP 0.8s · TBT 30ms
-- **Top 2%** globally on Codewars
-- **GPA 9.17/10** — B.Sc. Information Systems, IFCE
-- **English C1** (EF SET 66/100)
-- **1,650+** technical issues resolved · **450+** code reviews at Kenzie Academy Brasil
-
----
-
-## Stack
-
-<table align="center">
-<tr>
-<td valign="top" width="50%">
-
-### Frontend
-<div align="center">
-<a href="https://nextjs.org/"><img src="https://profilinator.rishav.dev/skills-assets/nextjs.png" alt="Next.js" height="45"/></a>
-<a href="https://reactjs.org/"><img src="https://profilinator.rishav.dev/skills-assets/react-original-wordmark.svg" alt="React" height="45"/></a>
-<a href="https://www.typescriptlang.org/"><img src="https://profilinator.rishav.dev/skills-assets/typescript-original.svg" alt="TypeScript" height="45"/></a>
-<a href="https://www.tailwindcss.com/"><img src="https://profilinator.rishav.dev/skills-assets/tailwindcss.svg" alt="Tailwind CSS" height="45"/></a>
-<a href="https://www.javascript.com/"><img src="https://profilinator.rishav.dev/skills-assets/javascript-original.svg" alt="JavaScript" height="45"/></a>
-<a href="https://en.wikipedia.org/wiki/HTML5"><img src="https://profilinator.rishav.dev/skills-assets/html5-original-wordmark.svg" alt="HTML5" height="45"/></a>
-<a href="https://www.w3schools.com/css/"><img src="https://profilinator.rishav.dev/skills-assets/css3-original-wordmark.svg" alt="CSS3" height="45"/></a>
-</div>
-
-</td>
-<td valign="top" width="50%">
-
-### Backend
-<div align="center">
-<a href="https://nodejs.org/"><img src="https://profilinator.rishav.dev/skills-assets/nodejs-original-wordmark.svg" alt="Node.js" height="45"/></a>
-<a href="https://expressjs.com/"><img src="https://profilinator.rishav.dev/skills-assets/express-original-wordmark.svg" alt="Express" height="45"/></a>
-<a href="https://www.typescriptlang.org/"><img src="https://profilinator.rishav.dev/skills-assets/typescript-original.svg" alt="TypeScript" height="45"/></a>
-<a href="https://www.postgresql.org/"><img src="https://profilinator.rishav.dev/skills-assets/postgresql-original-wordmark.svg" alt="PostgreSQL" height="45"/></a>
-<a href="https://redis.io/"><img src="https://profilinator.rishav.dev/skills-assets/redis-original-wordmark.svg" alt="Redis" height="45"/></a>
-<a href="https://www.python.org/"><img src="https://profilinator.rishav.dev/skills-assets/python-original.svg" alt="Python" height="45"/></a>
-<a href="https://www.djangoproject.com/"><img src="https://profilinator.rishav.dev/skills-assets/django-original.svg" alt="Django" height="45"/></a>
-</div>
-
-</td>
-</tr>
-<tr>
-<td valign="top" width="50%">
-
-### Cloud & DevOps
-<div align="center">
-<a href="https://aws.amazon.com/"><img src="https://profilinator.rishav.dev/skills-assets/amazonwebservices-original-wordmark.svg" alt="AWS" height="45"/></a>
-<a href="https://www.docker.com/"><img src="https://profilinator.rishav.dev/skills-assets/docker-original-wordmark.svg" alt="Docker" height="45"/></a>
-<a href="https://github.com/features/actions"><img src="https://profilinator.rishav.dev/skills-assets/git-scm-icon.svg" alt="Git" height="45"/></a>
-</div>
-
-</td>
-<td valign="top" width="50%">
-
-### Architecture
 <div align="center">
 
-`Domain-Driven Design` `Event-Driven Architecture`
+<img src="./assets/brand/header-readme-github.jpg" alt="Mário Lucas — Full Stack Software Engineer" width="100%">
 
-`Feature-Sliced Design` `Clean Architecture`
+<br>
 
-`REST API` `JWT Auth` `RBAC`
+<img src="./assets/widgets/terminal.svg" alt="Terminal: Mário Lucas, Full Stack Engineer. Architecture, code, cloud, delivery. Shipping to production, and it keeps running." width="82%">
+
+<br><br>
+
+**[Portfolio ↗](https://mariolucas.tech)** &nbsp;&nbsp;/&nbsp;&nbsp; **[LinkedIn ↗](https://www.linkedin.com/in/mariolucass/)** &nbsp;&nbsp;/&nbsp;&nbsp; **[mariolasdev@gmail.com](mailto:mariolasdev@gmail.com)**
+
+<br>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/sections/what-dark.svg">
+  <img src="./assets/sections/what-light.svg" alt="01 — What I do" width="100%">
+</picture>
+
+<img src="./assets/cards/bento.svg" alt="Real problems, owned end to end. Four years in software: almost three reviewing other people's code at Kenzie, then over a year running a production platform alone at CECAPE. 1,650+ technical issues resolved, 450+ code reviews, 9.17 academic average, English C1." width="100%">
+
+<br><br>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/sections/work-dark.svg">
+  <img src="./assets/sections/work-light.svg" alt="02 — Selected work" width="100%">
+</picture>
+
+### CECAPE Tech · Academic Repository
+
+**Sole technical owner · Architecture → Production on AWS**
+
+The institutional repository of Faculdade CECAPE, designed and shipped from zero.<br>**260 publications** from **418 authors**, across **17 courses**, organized in **6 collections**.
+
+**[Visit the repository ↗](https://repositorio.faculdadececape.edu.br/)**
+
+<a href="https://repositorio.faculdadececape.edu.br/"><img src="./assets/cards/repo-stats.svg" alt="Academic Repository: 260 publications from 418 authors, across 17 courses, in 6 collections." width="100%"></a>
+
+<br>
+
+<img src="./assets/diagrams/architecture.svg" alt="Architecture: readers reach App Runner inside a VPC, which talks to RDS PostgreSQL for full-text search and to S3 for files, with IAM scoping permissions." width="100%">
+
+<br>
+
+<img src="./assets/cards/decisions.svg" alt="Decisions: DDD plus events, native PostgreSQL full-text search, least-privilege AWS." width="100%">
+
+<br>
+
+<details>
+<summary><b>Why no Elasticsearch?</b></summary>
+
+<br>
+
+The catalog is a bounded, relational dataset. Postgres `tsvector` + GIN indexes cover ranking, stemming and filters in the same transaction as the rest of the data, so there is no second system to sync, secure, monitor or pay for. If the problem outgrows it, the domain boundary makes the swap local.
+
+</details>
+
+<br>
+
+### Kenzie Academy Brasil
+
+**Technical Mentor & Code Reviewer**
+
+Unblocked developers at scale: **1,650+ technical issues resolved**<br>and **450+ code reviews** delivered, raising code quality across cohorts.
+
+<br>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/sections/building-dark.svg">
+  <img src="./assets/sections/building-light.svg" alt="03 — Currently building" width="100%">
+</picture>
+
+<img src="./assets/cards/now.svg" alt="Now: building Iron Ledger, running the Academic Repository in production, studying Information Systems at IFCE." width="100%">
+
+<br>
+
+### Iron Ledger · Inventory, audit and saga orchestration
+
+*In development · TypeScript · Express · Prisma · PostgreSQL · RabbitMQ · Temporal · Next.js · Python*
+
+A distributed system for stock operations: every mutation is traceable,<br>multi-step transactions compensate when they fail, and the audit trail can't be rewritten.
+
+**[Live demo ↗](https://iron-ledger-six.vercel.app/)**
+
+<a href="https://iron-ledger-six.vercel.app/"><img src="./assets/diagrams/ledger-flow.svg" alt="Iron Ledger flow: a stock movement is written with its outbox event in PostgreSQL, relayed through RabbitMQ and stored in an append-only audit log. A transaction starts a Temporal saga that reserves and confirms stock, or releases the reservation on failure." width="100%"></a>
+
+<br>
+
+<img src="./assets/cards/ledger.svg" alt="Iron Ledger: transactional outbox, sagas, append-only audit, DDD." width="100%">
+
+<br>
+
+Next.js frontend in Feature-Sliced Design, with a BFF that keeps the session JWT in an HTTP-only cookie.<br>An isolated Python analytics service runs batch pipelines behind its own HTTP API.
+
+<br>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/sections/toolkit-dark.svg">
+  <img src="./assets/sections/toolkit-light.svg" alt="04 — Toolkit" width="100%">
+</picture>
+
+<img src="./assets/widgets/toolkit.svg" alt="Toolkit: React, Next.js, TypeScript, Tailwind, shadcn/ui, Node.js, Express, Python, Django, PostgreSQL, Redis, Prisma, AWS, Docker, Git, RabbitMQ, Temporal." width="100%">
+
+<br>
+
+DDD &nbsp;·&nbsp; Event-driven &nbsp;·&nbsp; Sagas &nbsp;·&nbsp; REST &nbsp;·&nbsp; JWT &nbsp;·&nbsp; RBAC &nbsp;·&nbsp; Feature-Sliced Design
+
+<br><br>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/sections/background-dark.svg">
+  <img src="./assets/sections/background-light.svg" alt="05 — Background" width="100%">
+</picture>
+
+**B.Sc. Information Systems · IFCE** (expected 2027)<br>Academic average **9.17/10** &nbsp;·&nbsp; English **C1**, EF SET 66/100
+
+<br><br>
+
+<img src="./assets/cards/cta.svg" alt="Let’s build something useful." width="100%">
+
+<br>
+
+Open to engineering opportunities and conversations about my work.
+
+**[Get in touch](mailto:mariolasdev@gmail.com)** &nbsp;&nbsp;/&nbsp;&nbsp; **[LinkedIn ↗](https://www.linkedin.com/in/mariolucass/)** &nbsp;&nbsp;/&nbsp;&nbsp; **[GitHub ↗](https://github.com/mariolucass)**
+
+<img src="./assets/brand/footer-readme-github.jpg" alt="" width="100%">
 
 </div>
-
-</td>
-</tr>
-</table>
-
----
-
-## Stats
-
-<div align="center">
-  <img src="https://streak-stats.demolab.com?user=mariolucass&locale=en&mode=daily&theme=gotham&hide_border=true&border_radius=8&order=3&hide_current_streak=true" height="200" alt="streak graph"/>
-</div>
-
-<div align="center">
-  <img height="150em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=mariolucass&hide=html&count_private=true&bg_color=002e34,004443,002e34&title_color=00c16c&icon_color=00c16c&text_color=e9e9e9&border_color=00755c&layout=compact"/>
-</div>
-
-<div align="center">
-  <a href="https://www.codewars.com/users/mariolucass">
-    <img src="https://www.codewars.com/users/mariolucass/badges/large" height="60" alt="Codewars"/>
-  </a>
-</div>
-
----
-
-<hr/>
-
-![Footer](https://live.staticflickr.com/65535/52922424826_d803914c35_h.jpg)

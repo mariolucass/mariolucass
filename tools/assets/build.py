@@ -6,7 +6,7 @@
 
 Grenze (OFL) is converted to outlines, so the SVGs never depend on a webfont.
 """
-import html, json, re
+import html, itertools, json, re
 from datetime import date, timedelta
 from pathlib import Path
 from fontTools.ttLib import TTFont
@@ -18,7 +18,7 @@ HERE = Path(__file__).parent
 OUT = HERE.parent.parent / "assets"
 
 # ---------- palette ----------
-T, TX, SOFT, MU = "#6FE0C8", "#f2f4f5", "#c7cdd3", "#aab1b8"
+T, TX, SOFT, MU = "#6FE0C8", "#f5f6f7", "#d3d8dd", "#b4bbc3"
 BG, PANEL, LINE = "#1c1d1f", "#26282b", "#3a3d41"
 WARN = "#ff8a7a"
 R = 22  # one corner radius for every card
@@ -73,19 +73,37 @@ def etext(text, x, y, fill, anchor="start", size=16):
 # ---------- shared SVG parts ----------
 def defs(extra=""):
     return f"""<defs>
-<linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c2e32"/><stop offset="1" stop-color="#1e1f22"/></linearGradient>
-<linearGradient id="cs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".20"/><stop offset=".5" stop-color="#fff" stop-opacity=".06"/><stop offset="1" stop-color="#fff" stop-opacity=".04"/></linearGradient>
-<radialGradient id="glow" cx=".85" cy="0" r="1"><stop offset="0" stop-color="{T}" stop-opacity=".22"/><stop offset="1" stop-color="{T}" stop-opacity="0"/></radialGradient>
+<linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#242528"/><stop offset="1" stop-color="#1b1c1e"/></linearGradient>
+<linearGradient id="cs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".35" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#fff" stop-opacity=".06"/></linearGradient>
+<linearGradient id="gtl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".30"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="gf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".055"/><stop offset="1" stop-color="#fff" stop-opacity=".03"/></linearGradient>
+<radialGradient id="glow" cx=".85" cy="0" r="1"><stop offset="0" stop-color="{T}" stop-opacity=".10"/><stop offset="1" stop-color="{T}" stop-opacity="0"/></radialGradient>
 <marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="{T}"/></marker>
 <marker id="ar2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="{WARN}"/></marker>{extra}</defs>"""
 
 
+_ids = itertools.count()
+
+
 def card(x, y, w, h, glow=False):
-    s = f'<rect x="{x + .5}" y="{y + .5}" width="{w - 1}" height="{h - 1}" rx="{R}" fill="url(#cg)" stroke="url(#cs)"/>'
+    """Near-flat dark surface, hairline border and a single line of light on the top edge."""
+    n = next(_ids)
+    box = f'x="{x}" y="{y}" width="{w}" height="{h}"'
+    s = f'<clipPath id="k{n}"><rect {box} rx="{R}"/></clipPath><rect {box} rx="{R}" fill="url(#cg)"/>'
     if glow:
-        s += (f'<clipPath id="k{x}_{y}"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{R}"/></clipPath>'
-              f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="url(#glow)" clip-path="url(#k{x}_{y})"/>')
+        s += f'<g clip-path="url(#k{n})"><rect {box} fill="url(#glow)"/></g>'
+    s += f'<rect x="{x + .5}" y="{y + .5}" width="{w - 1}" height="{h - 1}" rx="{R}" fill="none" stroke="url(#cs)"/>'
+    s += f'<rect x="{x + R}" y="{y + .5}" width="{w - 2 * R}" height="1" fill="url(#gtl)"/>'
     return s
+
+
+def glass(x, y, w, h, rx=14, col=None, dash=False, strong=False):
+    """Small glass plate for nodes and boxes inside diagrams."""
+    st = f'stroke="{col}" stroke-width="1.6"' if col else 'stroke="#fff" stroke-opacity=".12"'
+    if dash:
+        st += ' stroke-dasharray="5 5"'
+    return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{rx}" fill="url(#gf)"/>'
+            f'<rect x="{x + .5}" y="{y + .5}" width="{w - 1}" height="{h - 1}" rx="{rx}" fill="none" {st}/>')
 
 
 def tx(x, y, s, size=14, fill=SOFT, w=400, anchor="start", font=SANS, ls=0):
@@ -110,66 +128,88 @@ def save(folder, name, content):
     (p / f"{name}.svg").write_text(content, encoding="utf-8")
 
 
-# ---------- hero (header image + terminal + availability), rounded as one composition ----------
+# ---------- hero: everything on an 8px grid, units match the 900px-wide canvas ----------
+def mtext(text, size, x, y, fill, w=400, anchor="middle"):
+    """JetBrains Mono outlines: exact advance widths, so the typing cursor never drifts."""
+    return face("JetBrainsMono-var.ttf", w).path(text, size, x, y, fill, anchor)
+
+
 def terminal_body(W, H):
     lines = [("$ ", "whoami", TX), ("", "Mário Lucas · Full Stack Engineer", T),
              ("$ ", "cat focus.txt", TX), ("", "architecture · code · cloud · delivery", MU),
              ("$ ", "uptime", TX), ("", "shipping to production, and it keeps running", T)]
-    cw = 10.2
+    mono, SIZE = face("JetBrainsMono-var.ttf", 400), 17
     s = card(0, 0, W, H)
     s += f'<clipPath id="tb"><rect width="{W}" height="40" rx="{R}"/></clipPath><rect width="{W}" height="40" fill="#fff" fill-opacity=".05" clip-path="url(#tb)"/>'
     for i, c in enumerate(["#ff5f56", "#ffbd2e", "#27c93f"]):
-        s += f'<circle cx="{28 + i * 22}" cy="20" r="6" fill="{c}"/>'
-    s += tx(W / 2, 25, "mario@production: ~", 13, MU, 400, "middle", MONO)
-    t, y = 0.4, 88
-    for i, (p, txt, col) in enumerate(lines):
-        full, dur = p + txt, max(0.3, len(p + txt) * 0.035)
-        s += (f'<clipPath id="c{i}"><rect x="30" y="{y - 22}" width="0" height="30"><animate attributeName="width" '
-              f'from="0" to="{len(full) * cw + 4}" begin="{t:.2f}s" dur="{dur:.2f}s" fill="freeze"/></rect></clipPath>')
-        s += (f'<text x="30" y="{y}" font-family="{MONO}" font-size="17" clip-path="url(#c{i})">'
-              f'<tspan fill="{T}">{p}</tspan><tspan fill="{col}">{txt}</tspan></text>')
+        s += f'<circle cx="{32 + i * 24}" cy="20" r="6" fill="{c}"/>'
+    s += mtext("mario@production: ~", 13, W / 2, 25, MU)
+    t, ys = 0.4, [96, 128, 176, 208, 256, 288]
+    for i, ((p, txt, col), y) in enumerate(zip(lines, ys)):
+        wp, wt = mono.width(p, SIZE), mono.width(txt, SIZE)
+        dur = max(0.3, len(p + txt) * 0.035)
+        s += (f'<clipPath id="c{i}"><rect x="32" y="{y - 24}" width="0" height="32"><animate attributeName="width" '
+              f'from="0" to="{wp + wt + 4:.1f}" begin="{t:.2f}s" dur="{dur:.2f}s" fill="freeze"/></rect></clipPath><g clip-path="url(#c{i})">')
+        if p:
+            s += mtext(p, SIZE, 32, y, T, 400, "start")
+        s += mtext(txt, SIZE, 32 + wp, y, col, 400, "start") + "</g>"
         t += dur + 0.25
-        y += 34 if p else 44
-    s += (f'<rect x="{30 + len(lines[-1][1]) * cw + 6}" y="{y - 62}" width="10" height="22" fill="{T}" opacity="0">'
+    end = 32 + mono.width(lines[-1][1], SIZE) + 8
+    s += (f'<rect x="{end:.1f}" y="{ys[-1] - 17}" width="10" height="22" rx="2" fill="{T}" opacity="0">'
           f'<animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.01;0.5;0.51;1" dur="1.1s" '
           f'begin="{t:.2f}s" repeatCount="indefinite"/></rect>')
     return s
 
 
-def banner(jpg, uid, label):
-    """A 1400x350 JPG as a rounded, glass-edged 900x225 SVG (JPGs cannot have corner radius)."""
+def banner(jpg, uid, shimmer=False):
+    """A 1400x350 JPG as a rounded, glass-edged 900x224 SVG (JPGs cannot have corner radius)."""
     import base64
     data = base64.b64encode((OUT / "brand" / jpg).read_bytes()).decode()
-    return (f'<clipPath id="{uid}"><rect width="900" height="225" rx="{R}"/></clipPath>'
-            f'<image href="data:image/jpeg;base64,{data}" width="900" height="225" clip-path="url(#{uid})" preserveAspectRatio="xMidYMid slice"/>'
-            f'<rect x=".5" y=".5" width="899" height="224" rx="{R}" fill="none" stroke="url(#cs)"/>')
+    s = (f'<clipPath id="{uid}"><rect width="900" height="224" rx="{R}"/></clipPath>'
+         f'<image href="data:image/jpeg;base64,{data}" width="900" height="225" clip-path="url(#{uid})" preserveAspectRatio="xMidYMid slice"/>')
+    if shimmer:  # a soft streak of light that crosses the banner now and then
+        s += (f'<g clip-path="url(#{uid})"><rect x="-240" y="-20" width="160" height="270" fill="url(#sheen)" transform="skewX(-18)">'
+              '<animate attributeName="x" values="-240;1100;1100" keyTimes="0;.35;1" dur="9s" begin="2.5s" repeatCount="indefinite"/></rect></g>')
+    return s + f'<rect x=".5" y=".5" width="899" height="223" rx="{R}" fill="none" stroke="url(#cs)"/>'
+
+
+SHEEN = ('<linearGradient id="sheen" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/>'
+         '<stop offset=".5" stop-color="#fff" stop-opacity=".14"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>')
 
 
 def hero():
-    G, TW, TH = 16, 560, 300
-    top = 225 + G
-    b = banner("header-readme-github.jpg", "hb", "") + f'<g transform="translate(0,{top})">{terminal_body(TW, TH)}</g>'
+    G, TW, TH = 16, 560, 320
+    top = 224 + G
+    b = banner("header-readme-github.jpg", "hb", True) + f'<g transform="translate(0,{top})">{terminal_body(TW, TH)}</g>'
     x, w = TW + G, 900 - TW - G
     b += f'<g transform="translate({x},{top})">' + card(0, 0, w, TH, True)
-    b += '<circle cx="36" cy="44" r="4" fill="#27c93f"><animate attributeName="opacity" values="1;.25;1" dur="2s" repeatCount="indefinite"/></circle>'
-    b += eyebrow(50, 48, "Availability")
+    b += ('<circle cx="40" cy="48" r="4" fill="#27c93f"/><circle cx="40" cy="48" r="4" fill="none" stroke="#27c93f"><animate attributeName="r" values="4;14" dur="2s" repeatCount="indefinite"/>'
+          '<animate attributeName="opacity" values=".7;0" dur="2s" repeatCount="indefinite"/></circle>')
+    b += eyebrow(56, 54, "Availability")
     for i, l in enumerate(["Open to", "engineering", "opportunities."]):
-        b += gtext(l, 40, 36, 118 + i * 48, T if i == 2 else TX)
-    b += tx(36, 268, "Full Stack · TypeScript · AWS", 13.5, MU) + "</g>"
-    save("brand", "hero", svg(900, top + TH, b, "Mário Lucas, Full Stack Software Engineer. Terminal: architecture, code, cloud, delivery; shipping to production, and it keeps running. Open to engineering opportunities."))
+        b += gtext(l, 40, 32, 128 + i * 48, T if i == 2 else TX)
+    b += tx(32, 288, "Full Stack · TypeScript · AWS", 14, MU) + "</g>"
+    save("brand", "hero", svg(900, top + TH, b, "Mário Lucas, Full Stack Software Engineer. Terminal: architecture, code, cloud, delivery; shipping to production, and it keeps running. Open to engineering opportunities.", SHEEN))
 
 
 def footer():
-    save("brand", "footer", svg(900, 225, banner("footer-readme-github.jpg", "fb", ""), "Mário Lucas"))
+    save("brand", "footer", svg(900, 224, banner("footer-readme-github.jpg", "fb"), "Mário Lucas"))
 
 
-# ---------- widgets/link-*.svg : glass tiles instead of default blue links ----------
-def link_tile(name, label, value):
-    W, H = 288, 72
-    b = card(0, 0, W, H) + eyebrow(24, 31, label) + tx(24, 53, value, 15.5, TX, 600)
-    b += (f'<g transform="translate({W - 36},{H / 2})"><circle r="15" fill="#fff" fill-opacity=".05" stroke="#fff" stroke-opacity=".14"/>'
-          f'<path d="M-5 5 L5 -5 M-3 -5 H5 V3" fill="none" stroke="{T}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>')
-    save("widgets", f"link-{name}", svg(W, H, b, f"{label}: {value}"))
+# ---------- widgets/links: three tiles per row, each image is exactly 1/3 of the hero width ----------
+def link_row(row, tiles):
+    G, H = 16, 72
+    tw = (900 - 2 * G) / 3
+    for i, (name, label, value) in enumerate(tiles):
+        ox = i * (tw + G) - i * 300  # tile position inside its own 300px third
+        b = f'<g transform="translate({ox:.3f},0)">' + card(0, 0, tw, H) + eyebrow(24, 32, label) + tx(24, 56, value, 16, TX, 600)
+        b += (f'<g transform="translate({tw - 40:.3f},{H / 2})"><circle r="16" fill="#fff" fill-opacity=".05" stroke="#fff" stroke-opacity=".14"/>'
+              f'<path d="M-5 5 L5 -5 M-3 -5 H5 V3" fill="none" stroke="{T}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g></g>')
+        save("widgets/links", f"{row}-{name}", f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 {H}" width="300" height="{H}" role="img" aria-label="{label}: {value}">{defs()}{b}</svg>')
+
+
+def spacer():
+    save("widgets", "spacer", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1" width="1" height="1"/>')
 
 
 # ---------- widgets/toolkit ----------
@@ -234,7 +274,7 @@ def feature_cards(name, items, label, cols, H, tsize):
         x = i * (cw + g)
         b += card(x, 0, cw, H, i == 0) + eyebrow(x + cw / 2, 50, eb, "middle") + gtext(title, tsize, x + cw / 2, 108, TX, "middle")
         for j, l in enumerate(lines):
-            b += tx(x + cw / 2, 148 + j * 22, l, 13.5, SOFT, 400, "middle")
+            b += tx(x + cw / 2, 152 + j * 24, l, 14.5, SOFT, 400, "middle")
     save("cards", name, svg(W, H, b, label))
 
 
@@ -269,6 +309,43 @@ def now():
     b += tx(36, 213, f"Refreshed every {d['refresh_days']} days · next update {fmt(nxt)}", 12.5, MU)
     save("cards", "now", svg(W, H, b, "Now: building Iron Ledger, running the Academic Repository in production, studying Information Systems at IFCE."))
 
+# ---------- cards/timeline : experience + education on one axis (data from the portfolio) ----------
+def timeline():
+    W, H, X0, X1, TOP = 900, 392, 32, 868, 96
+    MONTHS = 72                                   # Jan 2022 .. Dec 2027
+    X = lambda m: X0 + m * (X1 - X0) / MONTHS
+    NOW = 58.5                                    # mid Nov 2026
+    rows = [("Kenzie Academy Brasil", "Technical Mentor & Code Reviewer · Jul 2022 – Apr 2025", 6, 40, "#5ab8a8"),
+            ("B.Sc. Information Systems", "IFCE · Aug 2023 – Aug 2027 (expected) · average 9.17/10", 19, 68, "#448c80"),
+            ("Faculdade CECAPE", "Full Stack Engineer · Sep 2025 – now", 44, NOW, T)]
+    extra = '<filter id="bl" x="-20%" y="-300%" width="140%" height="700%"><feGaussianBlur stdDeviation="6"/></filter>'
+    b = card(0, 0, W, H)
+    for y in range(2022, 2028):
+        x = X((y - 2022) * 12)
+        b += f'<line x1="{x:.1f}" y1="64" x2="{x:.1f}" y2="{H - 40}" stroke="#fff" stroke-opacity=".07"/>' + tx(x + 8, 52, str(y), 12.5, MU, 500)
+    for i, (name, sub, m0, m1, col) in enumerate(rows):
+        y0 = TOP + i * 88
+        x0, x1 = X(m0), X(m1)
+        b += gtext(name, 24, x0, y0 + 22, TX) + tx(x0, y0 + 44, sub, 13, SOFT)
+        by = y0 + 56
+        if name.startswith("Faculdade"):
+            b += f'<rect x="{x0:.1f}" y="{by}" width="{x1 - x0:.1f}" height="12" rx="6" fill="{col}" filter="url(#bl)" opacity=".7"/>'
+        if name.startswith("B.Sc."):
+            xn = X(NOW)
+            b += f'<rect x="{x0:.1f}" y="{by}" width="{xn - x0:.1f}" height="12" rx="6" fill="{col}"/>'
+            b += f'<rect x="{xn - 6:.1f}" y="{by + .5}" width="{x1 - xn + 5:.1f}" height="11" rx="5.5" fill="none" stroke="{col}" stroke-dasharray="4 4"/>'
+        else:
+            b += f'<rect x="{x0:.1f}" y="{by}" width="{x1 - x0:.1f}" height="12" rx="6" fill="{col}"/>'
+    xn = X(NOW)
+    gap0, gap1 = TOP + 2 * 88 - 6, TOP + 2 * 88 + 50      # keep the line out of the CECAPE label
+    for ya, yb in ((64, gap0), (gap1, H - 40)):
+        b += f'<line x1="{xn:.1f}" y1="{ya}" x2="{xn:.1f}" y2="{yb}" stroke="{T}" stroke-width="1.5" stroke-dasharray="4 4"/>'
+    b += (f'<circle cx="{xn:.1f}" cy="{TOP + 2 * 88 + 62}" r="6" fill="{T}"/><circle cx="{xn:.1f}" cy="{TOP + 2 * 88 + 62}" r="6" fill="none" stroke="{T}">'
+          '<animate attributeName="r" values="6;18" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="2s" repeatCount="indefinite"/></circle>')
+    b += etext("Today", xn, H - 16, T, "middle", 17)
+    save("cards", "timeline", svg(W, H, b, "Timeline, 2022 to 2027: Kenzie Academy Brasil as technical mentor and code reviewer (Jul 2022 to Apr 2025); B.Sc. Information Systems at IFCE (Aug 2023 to Aug 2027, expected, average 9.17 out of 10); Full Stack Engineer at Faculdade CECAPE (Sep 2025 to now).", extra))
+
+
 # ---------- cards/cta ----------
 def cta():
     W, H = 900, 170
@@ -286,7 +363,7 @@ def architecture():
     b += etext("VPC", 206, 108, T)
 
     def box(x, y, w, h, title, sub, hl=False):
-        return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="14" fill="{PANEL}" stroke="{T if hl else "#fff"}" stroke-opacity="{1 if hl else .14}" stroke-width="{1.6 if hl else 1}"/>'
+        return (glass(x, y, w, h, 14, T if hl else None)
                 + tx(x + w / 2, y + h / 2 - 3, title, 15, TX, 700, "middle") + tx(x + w / 2, y + h / 2 + 16, sub, 12, MU, 400, "middle"))
 
     def arrow(x1, y1, x2, y2):
@@ -308,9 +385,8 @@ def ledger_flow():
     b = card(0, 0, W, H) + tx(W / 2, 46, "Iron Ledger · how a change travels", 15, SOFT, 500, "middle")
 
     def node(x, y, t, sub, dash=False):
-        st = f'stroke="{WARN}" stroke-dasharray="5 5"' if dash else 'stroke="#fff" stroke-opacity=".18"'
-        return (f'<rect x="{x}" y="{y}" width="{nw}" height="{nh}" rx="14" fill="#232528" {st}/>'
-                + tx(x + nw / 2, y + 25, t, 14, TX, 700, "middle") + tx(x + nw / 2, y + 43, sub, 11.5, MU, 400, "middle"))
+        g = glass(x, y, nw, nh, 14, WARN if dash else None, dash)
+        return g + tx(x + nw / 2, y + 25, t, 14, TX, 700, "middle") + tx(x + nw / 2, y + 43, sub, 12, MU, 400, "middle")
 
     def lane(y, label, nodes):  # packets are drawn before nodes so they pass *behind* them
         s = eyebrow(x0, y - 14, label)
@@ -331,7 +407,7 @@ def ledger_flow():
 def headings():
     for fn, num, eb, title in [("what", "01", "Ownership", "What I do"), ("work", "02", "Shipped", "Selected work"),
                                ("building", "03", "In progress", "Currently building"), ("toolkit", "04", "Tools", "Toolkit"),
-                               ("background", "05", "Education", "Background")]:
+                               ("background", "05", "Education & experience", "Background")]:
         for mode, (ink, acc, ln) in {"dark": (TX, T, "#ffffff"), "light": ("#15171a", "#0e8f78", "#000000")}.items():
             W, H = 900, 132
             s = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="{title}">'
@@ -342,7 +418,7 @@ def headings():
 
 
 if __name__ == "__main__":
-    hero(); footer(); toolkit(); bento(); repo_stats(); now(); cta(); architecture(); ledger_flow(); headings()
+    hero(); footer(); toolkit(); bento(); repo_stats(); now(); timeline(); cta(); architecture(); ledger_flow(); headings()
     feature_cards("decisions", [("Architecture", "DDD + events", ["Business rules stay isolated;", "new features are cheap to add."]),
                                 ("Search", "Postgres FTS", ["Catalog search with no extra", "service to run or pay for."]),
                                 ("Cloud", "Least privilege", ["Isolated VPC, managed database,", "scoped IAM permissions."])],
@@ -352,7 +428,7 @@ if __name__ == "__main__":
                              ("Traceability", "Append-only", ["An audit log the database", "refuses to edit", "or delete."]),
                              ("Structure", "DDD", ["Five bounded contexts,", "four ADRs on the big", "trade-offs."])],
                   "Iron Ledger: transactional outbox, sagas, append-only audit, DDD.", 4, 250, 32)
-    for a in [("portfolio", "Portfolio", "mariolucas.tech"), ("linkedin", "LinkedIn", "in/mariolucass"),
-              ("email", "Email", "mariolasdev@gmail.com"), ("github", "GitHub", "mariolucass")]:
-        link_tile(*a)
+    link_row("top", [("portfolio", "Portfolio", "mario-dev.vercel.app"), ("linkedin", "LinkedIn", "in/mariolucass"), ("email", "Email", "mariolasdev@gmail.com")])
+    link_row("bottom", [("email", "Email", "mariolasdev@gmail.com"), ("linkedin", "LinkedIn", "in/mariolucass"), ("github", "GitHub", "mariolucass")])
+    spacer()
     print("assets rebuilt in", OUT)

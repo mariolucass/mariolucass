@@ -6,7 +6,7 @@
 
 Grenze (OFL) is converted to outlines, so the SVGs never depend on a webfont.
 """
-import json, re
+import html, json, re
 from datetime import date, timedelta
 from pathlib import Path
 from fontTools.ttLib import TTFont
@@ -25,23 +25,49 @@ R = 22  # one corner radius for every card
 MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"
 SANS = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
 
-# ---------- Grenze as outlines ----------
-_font = instantiateVariableFont(TTFont(HERE / "fonts/Grenze-var.ttf"), {"wght": 800})
-_gs, _cm, _hm, _upm = _font.getGlyphSet(), _font.getBestCmap(), _font["hmtx"], _font["head"].unitsPerEm
+# ---------- fonts as outlines (Grenze titles, Grenze Italic labels, Inter body) ----------
+class Face:
+    def __init__(self, file, axes):
+        f = instantiateVariableFont(TTFont(HERE / "fonts" / file), axes)
+        self.gs, self.cm, self.hm, self.upm = f.getGlyphSet(), f.getBestCmap(), f["hmtx"], f["head"].unitsPerEm
+
+    def _g(self, c):
+        g = self.cm.get(ord(c)) or self.cm.get(ord(" "))
+        return g
+
+    def width(self, text, size, ls=0):
+        return sum(self.hm[self._g(c)][0] * size / self.upm + ls for c in text)
+
+    def path(self, text, size, x, y, fill, anchor="start", ls=0):
+        text = html.unescape(text)
+        x -= {"start": 0, "middle": self.width(text, size, ls) / 2, "end": self.width(text, size, ls)}[anchor]
+        pen, sc = SVGPathPen(self.gs, ntos=lambda v: f"{v:.1f}"), size / self.upm
+        for c in text:
+            g = self._g(c)
+            self.gs[g].draw(TransformPen(pen, (sc, 0, 0, -sc, x, y)))
+            x += self.hm[g][0] * sc + ls
+        return f'<path d="{pen.getCommands()}" fill="{fill}"/>'
+
+
+_faces = {}
+def face(file, wght, **axes):
+    k = (file, wght, tuple(axes.items()))
+    if k not in _faces:
+        _faces[k] = Face(file, {"wght": wght, **axes})
+    return _faces[k]
 
 
 def width(text, size):
-    return sum(_hm[_cm[ord(c)]][0] for c in text) * size / _upm
+    return face("Grenze-var.ttf", 800).width(text, size)
 
 
 def gtext(text, size, x, y, fill, anchor="start"):
-    x -= {"start": 0, "middle": width(text, size) / 2, "end": width(text, size)}[anchor]
-    pen, sc = SVGPathPen(_gs, ntos=lambda v: f"{v:.1f}"), size / _upm
-    for c in text:
-        g = _cm[ord(c)]
-        _gs[g].draw(TransformPen(pen, (sc, 0, 0, -sc, x, y)))
-        x += _hm[g][0] * sc
-    return f'<path d="{pen.getCommands()}" fill="{fill}"/>'
+    return face("Grenze-var.ttf", 800).path(text, size, x, y, fill, anchor)
+
+
+def etext(text, x, y, fill, anchor="start", size=16):
+    """Grenze Italic: the small labels that used to be mono caps."""
+    return face("Grenze-Italic-var.ttf", 600).path(text, size, x, y, fill, anchor)
 
 
 # ---------- shared SVG parts ----------
@@ -63,12 +89,14 @@ def card(x, y, w, h, glow=False):
 
 
 def tx(x, y, s, size=14, fill=SOFT, w=400, anchor="start", font=SANS, ls=0):
+    if font == SANS:  # Inter outlines: identical on every OS
+        return face("Inter-var.ttf", w, opsz=14).path(s, size, x, y, fill, anchor, ls)
     return (f'<text x="{x}" y="{y}" font-family="{font}" font-size="{size}" font-weight="{w}" '
             f'fill="{fill}" text-anchor="{anchor}" letter-spacing="{ls}">{s}</text>')
 
 
 def eyebrow(x, y, s, anchor="start"):
-    return tx(x, y, s, 11, T, 700, anchor, MONO, 2)
+    return etext(s, x, y, T, anchor)
 
 
 def svg(w, h, body, label, extra=""):
@@ -82,12 +110,12 @@ def save(folder, name, content):
     (p / f"{name}.svg").write_text(content, encoding="utf-8")
 
 
-# ---------- widgets/terminal ----------
-def terminal():
+# ---------- hero (header image + terminal + availability), rounded as one composition ----------
+def terminal_body(W, H):
     lines = [("$ ", "whoami", TX), ("", "Mário Lucas · Full Stack Engineer", T),
              ("$ ", "cat focus.txt", TX), ("", "architecture · code · cloud · delivery", MU),
              ("$ ", "uptime", TX), ("", "shipping to production, and it keeps running", T)]
-    W, H, cw = 900, 300, 10.2
+    cw = 10.2
     s = card(0, 0, W, H)
     s += f'<clipPath id="tb"><rect width="{W}" height="40" rx="{R}"/></clipPath><rect width="{W}" height="40" fill="#fff" fill-opacity=".05" clip-path="url(#tb)"/>'
     for i, c in enumerate(["#ff5f56", "#ffbd2e", "#27c93f"]):
@@ -105,19 +133,55 @@ def terminal():
     s += (f'<rect x="{30 + len(lines[-1][1]) * cw + 6}" y="{y - 62}" width="10" height="22" fill="{T}" opacity="0">'
           f'<animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.01;0.5;0.51;1" dur="1.1s" '
           f'begin="{t:.2f}s" repeatCount="indefinite"/></rect>')
-    save("widgets", "terminal", svg(W, H, s, "Terminal: Mário Lucas, Full Stack Engineer."))
+    return s
+
+
+def banner(jpg, uid, label):
+    """A 1400x350 JPG as a rounded, glass-edged 900x225 SVG (JPGs cannot have corner radius)."""
+    import base64
+    data = base64.b64encode((OUT / "brand" / jpg).read_bytes()).decode()
+    return (f'<clipPath id="{uid}"><rect width="900" height="225" rx="{R}"/></clipPath>'
+            f'<image href="data:image/jpeg;base64,{data}" width="900" height="225" clip-path="url(#{uid})" preserveAspectRatio="xMidYMid slice"/>'
+            f'<rect x=".5" y=".5" width="899" height="224" rx="{R}" fill="none" stroke="url(#cs)"/>')
+
+
+def hero():
+    G, TW, TH = 16, 560, 300
+    top = 225 + G
+    b = banner("header-readme-github.jpg", "hb", "") + f'<g transform="translate(0,{top})">{terminal_body(TW, TH)}</g>'
+    x, w = TW + G, 900 - TW - G
+    b += f'<g transform="translate({x},{top})">' + card(0, 0, w, TH, True)
+    b += '<circle cx="36" cy="44" r="4" fill="#27c93f"><animate attributeName="opacity" values="1;.25;1" dur="2s" repeatCount="indefinite"/></circle>'
+    b += eyebrow(50, 48, "Availability")
+    for i, l in enumerate(["Open to", "engineering", "opportunities."]):
+        b += gtext(l, 40, 36, 118 + i * 48, T if i == 2 else TX)
+    b += tx(36, 268, "Full Stack · TypeScript · AWS", 13.5, MU) + "</g>"
+    save("brand", "hero", svg(900, top + TH, b, "Mário Lucas, Full Stack Software Engineer. Terminal: architecture, code, cloud, delivery; shipping to production, and it keeps running. Open to engineering opportunities."))
+
+
+def footer():
+    save("brand", "footer", svg(900, 225, banner("footer-readme-github.jpg", "fb", ""), "Mário Lucas"))
+
+
+# ---------- widgets/link-*.svg : glass tiles instead of default blue links ----------
+def link_tile(name, label, value):
+    W, H = 288, 72
+    b = card(0, 0, W, H) + eyebrow(24, 31, label) + tx(24, 53, value, 15.5, TX, 600)
+    b += (f'<g transform="translate({W - 36},{H / 2})"><circle r="15" fill="#fff" fill-opacity=".05" stroke="#fff" stroke-opacity=".14"/>'
+          f'<path d="M-5 5 L5 -5 M-3 -5 H5 V3" fill="none" stroke="{T}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>')
+    save("widgets", f"link-{name}", svg(W, H, b, f"{label}: {value}"))
 
 
 # ---------- widgets/toolkit ----------
 def toolkit():
     def icon(n):
         return re.search(r' d="([^"]+)"', (HERE / f"icons/{n}.svg").read_text()).group(1)
-    rows = [("INTERFACES", [("React", "react", "087EA4"), ("Next.js", "nextdotjs", "000000"), ("TypeScript", "typescript", "3178C6"),
+    rows = [("Interfaces", [("React", "react", "087EA4"), ("Next.js", "nextdotjs", "000000"), ("TypeScript", "typescript", "3178C6"),
                             ("Tailwind", "tailwindcss", "06B6D4"), ("shadcn/ui", "shadcnui", "000000")]),
-            ("SERVICES &amp; DATA", [("Node.js", "nodedotjs", "5FA04E"), ("Express", "express", "000000"), ("Python", "python", "3776AB"),
+            ("Services &amp; data", [("Node.js", "nodedotjs", "5FA04E"), ("Express", "express", "000000"), ("Python", "python", "3776AB"),
                                      ("Django", "django", "092E20"), ("PostgreSQL", "postgresql", "4169E1"), ("Redis", "redis", "FF4438"),
                                      ("Prisma", "prisma", "2D3748")]),
-            ("INFRA &amp; FLOW", [("AWS", "amazonwebservices", "FF9900"), ("Docker", "docker", "2496ED"), ("Git", "git", "F05032"),
+            ("Infra &amp; flow", [("AWS", "amazonwebservices", "FF9900"), ("Docker", "docker", "2496ED"), ("Git", "git", "F05032"),
                                   ("RabbitMQ", "rabbitmq", "FF6600"), ("Temporal", "temporal", "141414")])]
     W, RH, orb = 900, 150, 38
     H = 30 + len(rows) * RH
@@ -145,7 +209,7 @@ def toolkit():
 # ---------- cards/bento ----------
 def bento():
     b = card(0, 0, 540, 264) + card(556, 0, 344, 264, True) + card(0, 280, 262, 160) + card(278, 280, 262, 160) + card(556, 280, 344, 160)
-    b += eyebrow(36, 48, "OWNERSHIP")
+    b += eyebrow(36, 48, "Ownership")
     b += gtext("Real problems,", 50, 36, 112, TX) + gtext("owned end to end.", 50, 36, 166, T)
     for i, l in enumerate(["Four years in software: almost three reviewing other",
                            "people’s code at Kenzie, then over a year running a",
@@ -155,10 +219,10 @@ def bento():
     def stat(x, y, w, eb, num, l1, l2, size, ny):
         return (eyebrow(x + w / 2, y + 40, eb, "middle") + gtext(num, size, x + w / 2, ny, T, "middle")
                 + tx(x + w / 2, ny + 30, l1, 15, SOFT, 500, "middle") + (tx(x + w / 2, ny + 50, l2, 12.5, MU, 400, "middle") if l2 else ""))
-    b += stat(556, 0, 344, "KENZIE ACADEMY BRASIL", "1,650+", "technical issues resolved", "as mentor and code reviewer", 92, 150)
-    b += stat(0, 280, 262, "CODE REVIEWS", "450+", "delivered across cohorts", "", 64, 384)
-    b += stat(278, 280, 262, "IFCE · INFO. SYSTEMS", "9.17", "academic average, out of 10", "", 64, 384)
-    b += stat(556, 280, 344, "ENGLISH", "C1", "fluent · EF SET 66/100", "", 64, 384)
+    b += stat(556, 0, 344, "Kenzie Academy Brasil", "1,650+", "technical issues resolved", "as mentor and code reviewer", 92, 150)
+    b += stat(0, 280, 262, "Code reviews", "450+", "delivered across cohorts", "", 64, 384)
+    b += stat(278, 280, 262, "IFCE · Info. Systems", "9.17", "academic average, out of 10", "", 64, 384)
+    b += stat(556, 280, 344, "English", "C1", "fluent · EF SET 66/100", "", 64, 384)
     save("cards", "bento", svg(900, 440, b, "Real problems, owned end to end. 1,650+ technical issues resolved, 450+ code reviews, 9.17 academic average, English C1."))
 
 
@@ -194,13 +258,13 @@ def now():
     fmt = lambda x: f"{x.day:02d} {x.strftime('%b')} {x.year}"
     W, H = 900, 232
     b = card(0, 0, W, H) + '<circle cx="36" cy="40" r="4" fill="#27c93f"><animate attributeName="opacity" values="1;.25;1" dur="2s" repeatCount="indefinite"/></circle>'
-    b += eyebrow(50, 44, f"NOW · UPDATED {fmt(upd).upper()}")
+    b += eyebrow(50, 44, f"Now · updated {fmt(upd)}")
     cw = (W - 72) / 3
     for i, c in enumerate(d["columns"]):
         x = 36 + i * cw
         if i:
             b += f'<line x1="{x - 18}" y1="78" x2="{x - 18}" y2="170" stroke="#fff" stroke-opacity=".08"/>'
-        b += tx(x, 92, c["label"], 11, MU, 700, "start", MONO, 2) + gtext(c["title"], 27, x, 134, TX) + tx(x, 160, c["line"], 13.5, SOFT)
+        b += etext(c["label"], x, 92, MU, "start", 15) + gtext(c["title"], 27, x, 134, TX) + tx(x, 160, c["line"], 13.5, SOFT)
     b += f'<line x1="36" y1="190" x2="{W - 36}" y2="190" stroke="#fff" stroke-opacity=".07"/>'
     b += tx(36, 213, f"Refreshed every {d['refresh_days']} days · next update {fmt(nxt)}", 12.5, MU)
     save("cards", "now", svg(W, H, b, "Now: building Iron Ledger, running the Academic Repository in production, studying Information Systems at IFCE."))
@@ -216,10 +280,10 @@ def cta():
 def architecture():
     W, H = 900, 420
     b = card(0, 0, W, H) + gtext("CECAPE Academic Repository", 30, 28, 46, TX)
-    b += tx(28 + width("CECAPE Academic Repository", 30) + 14, 45, "PRODUCTION TOPOLOGY", 13, T, 700, "start", SANS, 2)
+    b += etext("Production topology", 28 + width("CECAPE Academic Repository", 30) + 16, 45, T)
     b += tx(28, 70, "AWS · isolated network, managed data, scoped permissions", 13, MU)
     b += f'<rect x="190" y="84" width="690" height="310" rx="16" fill="none" stroke="{T}" stroke-width="1.5" stroke-dasharray="6 6" opacity=".7"/>'
-    b += tx(206, 106, "VPC", 12, T, 700, "start", SANS, 2)
+    b += etext("VPC", 206, 108, T)
 
     def box(x, y, w, h, title, sub, hl=False):
         return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="14" fill="{PANEL}" stroke="{T if hl else "#fff"}" stroke-opacity="{1 if hl else .14}" stroke-width="{1.6 if hl else 1}"/>'
@@ -255,8 +319,8 @@ def ledger_flow():
         s += (f'<circle r="4.5" fill="{T}"><animateMotion dur="4.5s" repeatCount="indefinite" path="M{x0 + 10} {y + nh / 2} H{xs[3] + nw - 10}"/>'
               '<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.08;.92;1" dur="4.5s" repeatCount="indefinite"/></circle>')
         return s + "".join(node(xs[i], y, t, sub) for i, (t, sub) in enumerate(nodes))
-    b += lane(96, "EVERY MUTATION LEAVES A TRACE", [("Stock movement", "REST · RBAC"), ("PostgreSQL", "balance + outbox · 1 tx"), ("RabbitMQ", "domain events"), ("Audit log", "append-only")])
-    b += lane(204, "EVERY TRANSACTION CAN BE UNDONE", [("Transaction", "REST · starts the saga"), ("Temporal", "durable workflow"), ("Reserve stock", "through the API"), ("Confirm", "stock out + movement")])
+    b += lane(96, "Every mutation leaves a trace", [("Stock movement", "REST · RBAC"), ("PostgreSQL", "balance + outbox · 1 tx"), ("RabbitMQ", "domain events"), ("Audit log", "append-only")])
+    b += lane(204, "Every transaction can be undone", [("Transaction", "REST · starts the saga"), ("Temporal", "durable workflow"), ("Reserve stock", "through the API"), ("Confirm", "stock out + movement")])
     b += node(xs[3], 286, "Release", "reservation freed", True)
     b += f'<path d="M{xs[2] + nw / 2} {204 + nh + 4} V{286 + nh / 2} H{xs[3] - 4}" fill="none" stroke="{WARN}" stroke-width="1.6" stroke-dasharray="5 5" marker-end="url(#ar2)"/>'
     b += tx(xs[2] + nw / 2 + 12, 286 + nh / 2 - 8, "on failure", 11.5, WARN, 600)
@@ -265,27 +329,30 @@ def ledger_flow():
 
 # ---------- sections/*-dark|light ----------
 def headings():
-    for fn, num, eb, title in [("what", "01", "OWNERSHIP", "What I do"), ("work", "02", "SHIPPED", "Selected work"),
-                               ("building", "03", "IN PROGRESS", "Currently building"), ("toolkit", "04", "TOOLS", "Toolkit"),
-                               ("background", "05", "EDUCATION", "Background")]:
+    for fn, num, eb, title in [("what", "01", "Ownership", "What I do"), ("work", "02", "Shipped", "Selected work"),
+                               ("building", "03", "In progress", "Currently building"), ("toolkit", "04", "Tools", "Toolkit"),
+                               ("background", "05", "Education", "Background")]:
         for mode, (ink, acc, ln) in {"dark": (TX, T, "#ffffff"), "light": ("#15171a", "#0e8f78", "#000000")}.items():
             W, H = 900, 132
             s = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="{title}">'
                  f'<defs><linearGradient id="l"><stop offset="0" stop-color="{ln}" stop-opacity="0"/><stop offset=".5" stop-color="{ln}" stop-opacity=".22"/><stop offset="1" stop-color="{ln}" stop-opacity="0"/></linearGradient></defs>'
-                 f'<rect width="{W}" height="1" fill="url(#l)"/>' + tx(W / 2, 42, f"{num} — {eb}", 12, acc, 700, "middle", MONO, 3)
+                 f'<rect width="{W}" height="1" fill="url(#l)"/>' + etext(f"{num} — {eb}", W / 2, 44, acc, "middle", 18)
                  + gtext(title, 62, W / 2, 106, ink, "middle") + "</svg>")
             save("sections", f"{fn}-{mode}", s)
 
 
 if __name__ == "__main__":
-    terminal(); toolkit(); bento(); repo_stats(); now(); cta(); architecture(); ledger_flow(); headings()
-    feature_cards("decisions", [("ARCHITECTURE", "DDD + events", ["Business rules stay isolated;", "new features are cheap to add."]),
-                                ("SEARCH", "Postgres FTS", ["Catalog search with no extra", "service to run or pay for."]),
-                                ("CLOUD", "Least privilege", ["Isolated VPC, managed database,", "scoped IAM permissions."])],
+    hero(); footer(); toolkit(); bento(); repo_stats(); now(); cta(); architecture(); ledger_flow(); headings()
+    feature_cards("decisions", [("Architecture", "DDD + events", ["Business rules stay isolated;", "new features are cheap to add."]),
+                                ("Search", "Postgres FTS", ["Catalog search with no extra", "service to run or pay for."]),
+                                ("Cloud", "Least privilege", ["Isolated VPC, managed database,", "scoped IAM permissions."])],
                   "Decisions: DDD plus events, native PostgreSQL full-text search, least-privilege AWS.", 3, 236, 38)
-    feature_cards("ledger", [("RELIABILITY", "Outbox", ["Balance and event written", "in one transaction, then", "relayed to RabbitMQ."]),
-                             ("WORKFLOWS", "Sagas", ["Temporal reserves and", "confirms stock, or releases", "it when a step fails."]),
-                             ("TRACEABILITY", "Append-only", ["An audit log the database", "refuses to edit", "or delete."]),
-                             ("STRUCTURE", "DDD", ["Five bounded contexts,", "four ADRs on the big", "trade-offs."])],
+    feature_cards("ledger", [("Reliability", "Outbox", ["Balance and event written", "in one transaction, then", "relayed to RabbitMQ."]),
+                             ("Workflows", "Sagas", ["Temporal reserves and", "confirms stock, or releases", "it when a step fails."]),
+                             ("Traceability", "Append-only", ["An audit log the database", "refuses to edit", "or delete."]),
+                             ("Structure", "DDD", ["Five bounded contexts,", "four ADRs on the big", "trade-offs."])],
                   "Iron Ledger: transactional outbox, sagas, append-only audit, DDD.", 4, 250, 32)
+    for a in [("portfolio", "Portfolio", "mariolucas.tech"), ("linkedin", "LinkedIn", "in/mariolucass"),
+              ("email", "Email", "mariolasdev@gmail.com"), ("github", "GitHub", "mariolucass")]:
+        link_tile(*a)
     print("assets rebuilt in", OUT)

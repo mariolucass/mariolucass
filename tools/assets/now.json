@@ -1,0 +1,9 @@
+{
+  "updated": "2026-11-17",
+  "refresh_days": 20,
+  "columns": [
+    { "label": "BUILDING", "title": "Iron Ledger", "line": "Sagas, outbox and audit trail" },
+    { "label": "IN PRODUCTION", "title": "Academic Repository", "line": "260 publications, on AWS" },
+    { "label": "STUDYING", "title": "Info. Systems", "line": "IFCE · expected 2027" }
+  ]
+}
